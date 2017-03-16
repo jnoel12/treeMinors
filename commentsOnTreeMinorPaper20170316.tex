@@ -1,0 +1,362 @@
+ \documentclass[11 pt]{article}
+%PACKAGES
+\usepackage{amsmath, amsthm,amssymb,bbm,enumerate,mathrsfs,mathtools}
+\usepackage{a4wide}
+\usepackage{tikz,verbatim}
+\usepackage{xcolor}
+\usetikzlibrary{calc,shapes}
+\usepackage{hyperref,wasysym}
+\usepackage{makecell}
+\usepackage[numbers,sort&compress]{natbib}
+
+%----------------------------------------------------------------------
+%
+% These define vertex styles
+%
+%----------------------------------------------------------------------
+\tikzset{
+  bigblack/.style={circle, draw=black!100,fill=black!100,thick, inner sep=1.5pt, minimum size=6mm},
+  blackcirc/.style={circle, draw=black!100,thick, inner sep=1.5pt, minimum size=6mm},  
+}
+
+\makeatletter
+\pgfdeclareshape{myNode}{
+  \inheritsavedanchors[from=rectangle] % this is nearly a rectangle
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{east}
+  \backgroundpath{% this is new
+    % store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    % construct main path
+    \pgfsetcornersarced{\pgfpoint{5pt}{5pt}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    \pgfsetcornersarced{\pgfpoint{5pt}{5pt}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathclose
+ }
+}
+\makeatother
+
+
+%TITLE, ETC
+
+%TITLE, ETC
+\title{Comments on Tree Minor Paper}
+\author{Jon Noel}
+\date{}
+
+\newtheoremstyle{case}{}{}{\normalfont}{}{\itshape}{:}{ }{}
+
+%THEOREM TYPES
+
+\newtheorem{almost}[equation]{Almost Theorem}
+\newtheorem{thm}[equation]{Theorem}
+\newtheorem{lem}[equation]{Lemma}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{conj}{Conjecture}
+\newtheorem{possThm}[equation]{Possible Theorem}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{claim}[equation]{Claim}
+\newtheorem{ques}[conj]{Question}
+\newtheorem{prob}[conj]{Problem}
+\newtheorem{selves}[equation]{Note To Selves}
+\newtheorem{fact}[equation]{Fact}
+\newtheorem{possible}[equation]{(Possible) Theorem}
+\newtheorem*{extremal}{Main Extremal Problem}
+\newtheorem*{maxTime}{Maximum Running Time Problem}
+\newtheorem*{critDensity}{Critical Density Problem}
+\newtheorem*{maxMin}{Largest Minimal Percolating Set Problem}
+
+\theoremstyle{definition}
+\newtheorem{defn}[equation]{Definition}
+\newtheorem{obs}[equation]{Observation}
+\newtheorem{ex}[equation]{Example}
+\newtheorem*{ack}{Acknowledgements}
+\newtheorem*{leap}{Leap of Faith}
+\newtheorem{note}[equation]{Note}
+\newtheorem{rem}{Remark}
+\newtheorem*{disc}{Disclaimer}
+\newtheorem{poss}{Possibility}
+\newtheorem*{hist}{Historical Remark}
+\newtheorem{exer}{Exercise}
+
+\newtheoremstyle{case}{}{}{\normalfont}{}{\itshape}{\normalfont:}{ }{}
+
+\theoremstyle{case}
+\newtheorem{case}{Case}
+\newtheorem{case2}{Case}
+\newtheorem{case3}{Case}
+\newtheorem{case4}{Case}
+\newtheorem{subcase}{Subcase}
+\newtheorem{subcase2}{Subcase}
+\newtheorem{round}{Round}
+
+
+
+\numberwithin{equation}{section}
+
+%BEGIN DOCUMENT
+
+\begin{document}
+\maketitle
+
+Please find a list of comments below. Changes which I think are necessary are listed with a $\boldsymbol{(*)}$ and those which are optional are listed with a $\bullet$. Anything which I think is a possible mathematical error is listed with a $\color{red}{\boldsymbol{(**)}}$. Please feel free to veto any changes that you don't like \smiley{}.
+
+\begin{rem}
+I would be happy to implement all of the ``uncontroversial'' changes (i.e. typos, minor rephrasings, etc) myself if someone sends me the latest \texttt{.tex} file.  
+\end{rem}
+
+\addtocounter{section}{-1}
+\section{Title Page and General Comments}
+
+\begin{itemize}
+\item[$\boldsymbol{(*)}$] I would prefer my (Jon's) name to be written as Jonathan A. Noel (to be consistent with my earlier publications). 
+\item[$\boldsymbol{(*)}$] Some of the author affiliations will need to be updated:
+\begin{itemize}
+\item My (Jon's) new address is Department of Mathematics, ETH Zurich, Switzerland
+(\texttt{jonathan.noel@math.ethz.ch}).
+\item Tash will soon be affiliated with Sidney Sussex College and the Department of Pure Mathematics and Mathematical Statistics at the University of Cambridge, probably with a new e-mail address too. 
+\item Hehui is either now in Shanghai or will be soon (at a research institute whose name I have forgotten).
+\item Bruce's affiliation may also need to be changed(?).
+\end{itemize}
+\item[$\boldsymbol{(*)}$] I assume we are using Canadian English? This means using ``colo\textbf{u}r,'' ``neighbo\textbf{u}r,'' ``maximi\textbf{z}e,'' etc. The writing appears to be pretty consistent so far, but I did catch at least one instance of ``maximise.''
+\item[$\boldsymbol{(*)}$] We should also be consistent about hyphenation. Currently, the paper contains 111 instances of ``non-root'' and 97 instances of ``nonroot,'' for example. The words nonempty, nonneighbour, etc are also inconsistent. Also there are some instances of ``non root.'' I don't have a preference about whether ``non'' words should be hyphenated or not, but we should be consistent. 
+\item We seem to be using the words ``vertex'' and ``node'' interchangeably. To me, it might make sense to say ``vertex'' when referring to a vertex of $G$ and ``node'' when referring to a vertex of the forest (currently, in some places, we use the word node for a vertex of $G$). However, it might make even more sense to just use the word vertex everywhere (or node, if you prefer). 
+\item[$\boldsymbol{(*)}$] In some proofs, the words Case 1, Case 2, etc are written in regular (not bold) typeface and in other proofs we use bold. Would be good to make this consistent. Also, sometimes we write ``\textbf{Case 1.} $x<y$:'' (i.e. ending the statement with a colon) and sometimes end the statement with a period or a comma. Also, sometimes we write \textbf{Case 1.} and sometimes \textbf{Case 1:} (i.e. sometimes with colon, sometimes with period). Should make this consistent, too. 
+\item[$\boldsymbol{(*)}$] We seem to be using the words ``cutset'' and ``cut'' interchangeably. Might be nicer to be consistent. 
+\end{itemize}
+
+\section{Introduction}
+
+\begin{itemize}
+\item[$\boldsymbol{(*)}$] \textbf{Statement of Conjecture 1:} S\'os should have an accent over the o. 
+\item \textbf{Paragraph after statement of Conjecture 1:} ``for large $t$'' might be nicer as ``for $t$ sufficiently large.''
+\item \textbf{Paragraph before Theorem 2:} The first sentence might be clearer and stronger as something like ``{We prove that Conjecture 1 is true for all $t$ with the word `subgraph' replaced by `minor.'}''
+\item \textbf{Second paragraph after Theorem 2:} The definition of rooted graph seems backwards to me. Better might be ``A \emph{rooted graph} is a pair $(G,v)$ where $G$ is a graph and $v\in V(G)$.''
+\item\textbf{Second paragraph of page 5 (before the proof that Theorem 3 implies Theorem 2):} It might be worth emphasising that this algorithm actually gives the the tree as a rooted subgraph. 
+\item \textbf{In the proof that Theorem 3 implies Theorem 2:}  In the sentence ``Let $B$ be a leaf block of $G$,'' it is possible that the reader won't know what we mean by a ``leaf block.'' A slightly gentler rephrasing could be: ``Let $B$ be a leaf in the block tree of $G$.'' (if the reader doesn't understand this sentence, they can at least look up what a block tree is). 
+\item \textbf{Last paragraph of the section:} This paragraph could use some expanding. Also, it might be more appropriate to put it after the statement of Theorem 3. 
+\item \textbf{General comment:} Currently, the introduction does a good job of connecting our paper to earlier work on the Erd\H{o}s-S\'os Conjecture. However, we seem to be ignoring all of the (very nice) connections to earlier work on the extremal function for minors. It seems like it would make sense to add a paragraph somewhere talking about how our result fits into a large body of work on bounding the average degree of a graph which avoids a certain graph as a minor and give some citations to papers such as Thomason (2001,2008), Reed and Wood (2016), Myers and Thomason (2005), Kostochka and Prince (2010), Harvey and Wood (2015), Chudnovsky, Reed and Seymour (2011), Erd\H{o}s and Gallai (1959), Cs\'oka, Lo, Norin, Wu and Yepremyan (2015), etc. 
+\end{itemize}
+
+\section{Rooted Forest Minors}
+
+\begin{itemize}
+\item \textbf{First paragraph:} It might be useful to explain to the reader \emph{why} we are proving a stronger version. Something like the following might be nice: ``Our proof of Theorem 3 is by induction. In order to prove it, we will actually prove a more general statement for a particular type of rooted forests; one advantage of this is that it gives us a stronger induction hypothesis which we can exploit. To describe this result,...''
+\item \textbf{Same paragraph:} Rather than calling $R$ an ordered set, it might be cleaner to say: ``A pair $(G,R)$ is a \emph{rooted graph} if $G$ is a graph and $R$ is a sequence of distinct vertices of $G$.''
+\item \textbf{Second paragraph, after display (1):} ``component $U$ of $G-X$ avoiding $R$'' might be clearer as ``component $U$ of $G-X$ disjoint from $R$.''
+\item \textbf{Same paragraph:} Here, an $a$-bad cutset is defined to be a set $X$, but elsewhere in the paper (e.g. in the statement of Lemma 8) we refer to an $a$-bad cutset as being a pair $(X,U)$. It would be good to make this consistent. One option is to just define it as a pair $(X,U)$ in the first place. 
+\item \textbf{After definition of $\boldsymbol{t}$-well behaved:} In the third sentence, we want to define a forest, but we are actually defining a list of trees. Clearer might be ``To see this, let $T=\bigcup_{i=1}^rT_i$ where $r\geq2$ and $T_i$ is a path on $3^i$ vertices rooted at an endpoint and let $t:=\sum_{i=1}^r 3^i = (3/2)(3^r-1)$. Clearly, $T$ is a rooted ballooning forest. Note that...''
+\item \textbf{Same paragraph:} ``... $G$ is \textbf{a} complete bipartite graph $K_{n,(t+r-2)/2}$...'' should be ``... $G$ is \textbf{the} complete bipartite graph $K_{n,(t+r-2)/2}$...''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} Delete the word ``so'' from the last sentence.
+\item[$\boldsymbol{(*)}$] \textbf{Definition of $\boldsymbol{t}$-special:} The words ``is \emph{$t$-special} if:'' should be in the same paragraph as the rest of the sentence containing them.
+\item[$\boldsymbol{(*)}$] \textbf{Definition of $\boldsymbol{t}$-special:} The definition says ``$J$ is $r$-connected,'' but $r$ has not been defined. Perhaps would be better to change $r$ to $|R|$ or $|R'|$ here (whatever is meant in the definition). Also, put a space before the word ``and.''
+\item \textbf{Statement of Theorem 4:} Again, we write a list of trees and call it a forest. Perhaps would be better to say ``Let $T$ be a rooted ballooning forest with components $T_1,\dots, T_r$ and $t$ vertices. Also, its sort of weird to say that $T$ is a rooted minor of $(G,R)$. Technically, we should be saying that the pair consisting of $T$ and its root sequence (which we should name) is a rooted minor of $(G,R)$.
+\item[$\boldsymbol{(*)}$] \textbf{Statement of Lemma 5:} The wording makes it unclear whether $(J,R')$ or $(G,R)$ has $r$ roots. Might be better to write ``... with $|R|=r$'' or $|R'|=r$ (whichever is meant) instead.
+\item[$\boldsymbol{(*)}$] \textbf{Sentence before statement of Theorem 6:} ``combing'' should be ``combining.''
+\item \textbf{Sentence before statement of Theorem 6:} Perhaps we should be saying that the proof of Theorem 6 is basically the same as the proof just given? 
+\item[$\boldsymbol{(*)}$] \textbf{Statement of Theorem 6:} Could replace $(G,(v_1,\dots,v_r))$ with $(G,R)$. That is, ``For every $r$ and $t$, if $(G,R)$ is a rooted graph with $r$ roots such that...'' Also, there is a missing absolute value sign in ``$|V(G) > t$'' and the word ``then'' should be preceded by a comma.
+\item \textbf{Paragraph after statement of Theorem 6:} It might be nicer if the constructions had been given names: e.g. ``Construction 2'' or something. Then we could say that, by Constructions..., ... and ..., this result is tight. Another thing: it is kind of weird to call them ``counterexamples.'' I would say that they are examples or constructions rather than counterexamples (the word counterexample makes me ask in my head ``counterexample to what?'').
+\item \textbf{Last paragraph:} When we say ``analogous result,'' which result are we referring to? Analogous to the Technical Theorem? If so, we should say so. Also, the words ``what is the bound'' would be clearer as ``what bound on the average degree is required.'' Also, would the analogous result say that you either find the rooted forest or you find a special minor? It would be nice to make this a bit cleaner, perhaps by formally stating it as a question (i.e. ``Question 1: ...).
+\end{itemize}
+
+\section{The Structure of the Proof}
+
+\begin{itemize}
+\item\textbf{First paragraph:} Comma after "see."
+\item \textbf{Second paragraph:} Might be clearer to say ``We suppose that the Technical Theorem is false and let $(G,R)$ and $T=\bigcup_{i=1}^rT_i$ be a counterexample minimizing...''
+\item \textbf{(iii) on page 8:} Might be nicer to write it as ``$\left(\frac{t-1}{2}\right)$-bad cut'' (i.e. with parentheses). 
+\item \textbf{Statement of Theorem 7:} Remove comma before ``such that.''
+\item \textbf{Paragraph after Theorem 7:} Might be better to write in the positive way rather than a double negative: ``The first part is the next lemma, proven in Sections 5 and 6, which shows that (i) holds for every such edge.''
+\item \textbf{Statement of Lemma 8:} Again, parentheses around $\frac{t-1}{2}$ would be nice. 
+\item \textbf{Paragraph starting ``The second part of...:''} ``Ballooning rooted forest'' should be ``rooted ballooning forest.'' There is another instance of this in the next paragraph, too.
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``... smaller problem to obtain a rooted \textbf{tree}...'' should be  ``... smaller problem to obtain a rooted \textbf{forest}...''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``special minor'' should probably be ``$t$-special minor.''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``the technical theorem'' should be  ``the Technical Theorem'' (capitalized). Also, there should be a space after the comma in ``theorem,except.''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``densiity'' should be ``density.''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``... conditions of the Technical Theorem \textbf{holds}...'' should be ``... conditions of the Technical Theorem \textbf{hold}...'' Also, ``hold'' should be followed by a comma.
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``reduction procees'' should be ``reduction process.''
+\item \textbf{Same paragraph:} Is it clear what we mean by ``fall out'' and ``reduction process'' in the last sentence of the paragraph? Maybe it would be clearer to say ``... hold, then we can break out of our inductive proof and construct a rooted minor of $T$ in $(G,R)$ directly, thereby obtaining a contradiction.''
+\item \textbf{Second last paragraph of the section:} ``minor.The'' should have a space and ``thrid'' should be ``third.'' Also, there should be a comma between ``HARDWIRED10'' and ``is to show.'' 
+\item \textbf{Same paragraph:} ``special minor'' should be ``$t$-special minor. Also, ``special minor \textbf{for} $G$'' might be better as ``$t$-special minor \textbf{in} $G$.'' 
+\item \textbf{Last paragraph of the section:} This description of how the Base Case Theorem is proved might not be accurate. Also, perhaps ``falling out'' should be ``breaking out'' and ``reduction process'' should be ``inductive proof.''
+\end{itemize}
+
+\section{Some Base Cases}
+
+\begin{itemize}
+\item\textbf{Section Title:} Perhaps ``The Base Cases'' would be more accurate (unless there are more base cases still to come?). 
+\item \textbf{First paragraph:} The first paragraph might be better as ``In this section, we prove Theorem 7 which implies that $G$ contains more than $\max\{6,t+1\}$ vertices. In order to do so, it is useful to first determine the number of edges required to ensure that a graph with exactly $t$ vertices contains every rooted ballooning forest as a minor.'' 
+\item \textbf{Second paragraph:} $F$ is never defined. 
+\item\textbf{Same paragraph:} I think that it makes sense to state the density condition required to find a rooted forest in a graph on $t$ vertices as a Proposition or something like that. It makes it way easier to refer to it (and for the reader to be able to find it). I also think that its worth writing the proof out more properly than it is right now; its not a long argument, and I think that the reader might get bogged down early unnecessarily if they have to fill in the details themselves.
+
+Also, in Subsection 4.1 ``David's additions to the Base Case Section'' it says that we will need this result again in Section 5. So, this is another good reason for giving it a name and number so that we can refer to it. 
+\item \textbf{The paragraph starting ``We leave it as an exercise...''} We aren't leaving it as an exercise, right? We will prove the theorem when $t\leq 6$ (but the proof just isn't written here right now). 
+\item \textbf{Somewhere...} we ought to, at some point, tell the reader that we are proving Theorem 7 in the case $|V(G)|=t+1$. I.e., somewhere it should say \emph{Proof of Theorem 7 in the case $|V(G)|=t+1$}. 
+\item \textbf{The next paragraph:} We need to first tell the reader that, when $|V(G)|=t+1$, $(G,R)$ is $t$-well behaved if and only if $G$ has at most $t-1$ nonedges and every root is adjacent to a nonroot. In fact, it would be kind of us to prove this simple fact. It is very unlikely that the reader will have simply realized this and very likely that they will simply be confused with this paragraph. 
+
+Also, the way that it is currently phrased, it sounds like we are proving that we can find the embedding under some additional assumptions... but, in reality, these are the assumptions of the Technical Theorem in the $t+1$ case in disguise. I don't expect the reader to notice that.
+\item \textbf{Same paragraph (and many other instances throughout the paper):} Should the words ``embed'' and ``embedding'' be defined somewhere? Also, is there an advantage of using the word ``embedding'' over ``minor'' or ``rooted minor'' or ``rooted model'' or something?
+\item \textbf{Same paragraph:} In the sentence explaining the lexicographic induction, I think that it would be good to put commas before all of the instances of the word ``then.''
+\item \textbf{Paragraph starting ``We consider first...'' and the paragraph following it:} I think that it would be good to write the fact that every root has at least three nonroot neighbours as a claim so that we can refer to it. 
+\item \textbf{Same paragraph: } ``non-root,which'' should be ``nonroot, which'' (it looks like the space is missing). Also, if the $t$ vertex case was put into a lemma or proposition or something, then we could reference it here.
+\item \textbf{Paragraph starting ``Continuing in this vein...:''} ``$t$-leaf case'' should be ``$t$ vertex case'' (or referencing something)
+\item \textbf{Same paragraph:} Do we really need to be assuming $t$ is at least $6$? Surely we can do it easily enough. Also, earlier, we said that we were assuming $t$ is at least $7$. 
+\item \textbf{Same paragraph:} ``sinply'' $\to$ ``simply.''
+\item[$\boldsymbol{(*)}$] \textbf{Throughout this section, and maybe the rest of the paper:} I don't think that $t_1,\dots,t_r$ were ever defined. Maybe they should have been defined at the beginning of Section 3 when we chose our counterexample? Or, perhaps they should have been defined in this section when we chose our counterexample to the $|V(G)|=t+1$ case?
+\item[$\boldsymbol{(*)}$] \textbf{Paragraph before Case 1:} The first sentence has various issues. The following change would fix these issues: ``If $t_1$ has a child in $T_1$ which is not a leaf, then let $t_0$ be a nonleaf child of $t_1$ with fewest descendants, let $T_0$ be the subtree of $T_1$ consisting of $t_0$ and its descendants, let $T_1':=T_1-T_0$ and let $v_0$ be any nonroot neighbour of $v_1$.''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} The roots of the forest are $t_1,\dots,t_r$ not $v_1,\dots,v_r$. Also, to be consistent with things that came earlier, the root sequence should be in parentheses. So, for example, $(T_0,T_1',T_2,\dots,T_r,v_0,\dots,v_r)$ should be $(T_0,T_1',T_2,\dots,T_r,(t_0,\dots,t_r))$. However, this notation is also not great because, once again, we are writing a sequence of trees when we should really be writing a forest. 
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} In order to apply induction, we need to say that the new instance is $t$-well behaved. Again, it would be good if we had written somewhere that the fact that there are at most $t-1$ non-edges and every root sees a nonroot is equivalent to being $t$-well behaved when $|V(G)|=t+1$. 
+\item \textbf{Same paragraph:} In the last sentence, it might be better to avoid a double negative: ``If every child of $t_1$ is a leaf, then we simply...'' Also, ``then'' should be preceded by a comma. 
+\item \textbf{Same paragraph:} It would make more sense for this paragraph to be contained in the proof of Case 1, since it is not used in any other cases. 
+\item \textbf{Same paragraph:} It might be nice to add a sentence at the end of this paragraph emphasising that, in any case, we can assume $T_1'$ is a star.
+\item \textbf{Second sentence of Case 1:} Add the words ``... by minimality of $G$'' to the end of the sentence. 
+\item \textbf{Same paragraph:} At the end of the sentence starting ``Next we embed some...'' we should put ``(we can do this because $T_1'$ is a star). 
+\item \textbf{Same paragraph:} I would slow down the argument that $|T_1'|\leq t/2$ just a bit (when I first read it, I thought that you were cheating, so the referee may think the same) in the following way: ``It follows that $T_1'$ is not the entire forest. This implies that either $r\geq2$ or $r=1$ and $|T_0|=|T_1'|=t/2$. In either case, $T_1'$ has at most $t/2$ vertices.''
+\item \textbf{Same paragraph:} Perhaps I'm mistaken, but I don't believe that we ever use the facts that
+\begin{itemize}
+\item $v_1$ has at most $|T_1'|$ nonroot non-neighbours.
+\item $|T_1'|\leq t/2$. 
+\end{itemize}
+If its true that we don't use them, then we should not prove them. 
+\item \textbf{Same paragraph:} I would also slow down the next sentence (again, it took me longer than it should have to understand what was going on here): ``If $v_1$ has at least $|T_1'|+1$ nonroot neighbours, then we embed the children of $t_1$ in $T_1$ into these neighbours. Now, delete $v_1$ and the image of every leaf neighbour of $t_1$. Since $v_1$ has at least $|T_1'|$ non-root neighbours, the remaining graph has at most $t-|T_1'|$ non-neighbours. Also, since we only used $|T_1'|$ neighbours of $v_1$, the remaining graph still has a universal nonroot vertex. Therefore, we can embed the rest of the forest (including $T_0$, if it is nonempty) into the remaining graph by induction.''
+\item \textbf{Same paragraph:} I think that we get that $v_1$ has at most $|T_1'|+r-1$ neighbours in any case (I don't get why its different if $T_0$ is empty or not). 
+\item \textbf{Same paragraph:} After getting an upper bound on the number of neighbours of $v_1$, we should say that it implies that $v_1$ has at least $t$ minus that upper bound non-neighbours. (this is used later, so it should at least be written somewhere)
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} There are two places where there is a space missing before a left parenthesis ``(.''
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} In the last sentence there is a space missing after a comma. 
+\item \textbf{Case 2:} Perhaps ``size'' is a bad word since some people use size to mean number of edges. Clearer to say ``$T_1$ has two vertices.''
+\item[$\boldsymbol{(*)}$] \textbf{First paragraph of Case 2:} There is a ``then then.'' Also, there should be a comma before ``then.''
+\item \textbf{Same paragraph:} Would be good to put ``(here we use the fact that every root has at least three nonroot neighbours)'' at the end.
+\item \textbf{Same paragraph:} ``child of $t-1$'' $\to$ ``child of $t_1$.''
+\item \textbf{Same paragraph:} Sentence starting ``If $v_1$ has exactly...'' should have a comma before ``then.''
+\item \textbf{Last paragraph of Case 2:} I found the logic of this paragraph tough to follow (if it wasn't for that pesky tree of size 3, it would be easier). Also, I don't think that the case $|T_2|=3$ is ever actually proved here (since finding the sets $C_i$ is not good enough in this case). 
+
+Anyway, there is also an easier argument. To the previous paragraph, add: ``Also, the number of nonedges is exactly $t-1$ since, otherwise, we could embed $T_1$ into $v_1$ and a nonuniversal nonroot (which we can do because $v_1$ is universal and $G$ is not a clique). The number of nonedges in the remaining graph is at most $t-3$ and so we can apply induction.''
+
+The final paragraph can become: ``So each nonuniversal nonroot has exactly one nonneighbour in $R$ or is in a pair of nonadjacent nonroots which both see all other vertices. Let $A$ be the set of nonroots of the first type, $B$ be the set of nonroots of the second type and $U$ be the set of universal nonroots. Then the number of nonedges in $G$ is exactly $|A| + \frac{|B|}{2} = t+1-r - \frac{|B|}{2} - |U|$ which, as we proved above, is exactly $t-1$. This implies that $2|U| + |B| = 4-2r$. So, in particular, $r$ is one or two. The case $r=1$ is trivial since $|T_1|=2$. In the case $r=2$, we get $|U|=|B|=0$ and $v_1$ is universal implying that every nonroot vertex is nonadjacent to $v_2$, which is a contradiction.''
+\item \textbf{Cases 3 and 4:} Using the same simple idea, we can merge and simplify cases 3 and 4 as follows:
+
+``Case 3: $t_1$ is a leaf and $|T_1|\geq3$.
+
+If $v_1$ is not universal, then we simply embed the neighbour of $t_1$ into any nonroot neighbour of $v_1$ and apply induction. So, $v_1$ is universal. Also, the same argument implies that $G$ has exactly $t-1$ nonedges.
+
+If some nonroot $w$ is nonadjacent to a root $v_i$, then we simply embed the neighbour of $t_1$ in $T_1$ into $w$ and apply induction on the graph obtained from $G-v_1$ by adding the edge $v_iw$. So, every root is universal. 
+
+Thus, if every nonroot was incident to at most one nonedges, then the total number of nonedges would be at most $\frac{t+1-r}{2}< t-1$, which is a contradiction as we have already proved that there are $t-1$ nonedges. So, we let $w$ be a nonroot incident to at least two nonedges and, subject to this, we let $w$ have the fewest nonneighbours. 
+
+If $|T_1|\geq 4$, then we embed some leaf $\ell$ of $T_1$ other than $t_1$ into $w$ and we root $T_1-t_1-\ell$ at some nonroot neighbour $v$ of $w$ (where the root of $T_1-t_1-\ell$ is the unique neighbour of $\ell$). If $v$ has a neighbour outside of $R\cup\{w\}$, then can apply induction to $T_1-t_1-\ell,T_2,\dots,T_r$ and $G-v_1-w$ and we are done (Note that, here, we are using the fact that $v_1$ is universal and, therefore, will be joined to the image of its child in $T_1$ automatically). Otherwise, $v$, and hence also $w$, has at least $t-r-1$ nonneighbours and so $G$ has at least $2t-2r-2 > t-1$ non-edges, which is a contradiction. 
+
+So, $|T_1|=3$. If there is a nonroot vertex $w$ incident to at least three nonedges, then we embed $T_1$ into $v_1,w$ and a neighbour of $w$ and we apply induction. So, each nonroot has at most two non-neighbours which, since roots are universal, implies that the number of nonedges is at most $t+1-r$. Since we know that there are $t-1$ nonedges, we get that $r$ is one or two. The case $r=1$ is trivial, so we assumt that $r=2$ and that every non-root has exactly two non-neighbours. Since $r=2$, we know that $t\geq 2|T_1|+1 = 7$ and so there must exist a pair $u,w$ of adjacent nonroots. We embed $T_1$ on $v_1,u$ and $w$ and apply induction.''
+
+\item \textbf{End of the section:} What is Subsection 4.1? Is it just a note to remind us which base cases are needed? It seems to be a comment asking us to prove things that are already proved in this section.  
+\end{itemize}
+
+\section{Avoiding Bad Cuts I: Rooted Clique Minors}
+
+\begin{itemize}
+\item \textbf{Section title:} Putting a ``I'' in the section title is a bit strange if there isn't a part II. 
+\item \textbf{First paragraph:} The second sentence might be a bit clearer as ``Thus, we can assume that $G$ contains at least $t+2$ vertices and that $t\geq7$. 
+\item \textbf{Second paragraph:} ``If $z$ is in neither $X'$ nor $U'$, then...'' $\to$ ``If $z\notin X'\cup U'$, then...''
+\item \textbf{Throughout:} ``$\frac{t-1}{2}$-bad cutset'' $\to$ ``$\left(\frac{t-1}{2}\right)$-bad cutset''
+\item \textbf{Third paragraph:} Comma before ``then.'' Also, ``... letting $X$ be the uncontraction of $X'$'' would be better as ``... letting $X:=(X'\setminus \{z\})\cup\{x,y\}$.'' Or, alternatively, it would be good to define the word ``uncontraction.''
+\item \textbf{Lemma 9:} Is Lemma 9 possibly of independent interest? It seems interesting to know the conditions for forcing a rooted clique minor, and it could be useful in other problems where you want to delete a root-free chunk of a rooted graph and put a clique on the cutset like we are doing here. If it is of independent interest, then it may be worth emphasising. 
+\item[$\boldsymbol{(*)}$] \textbf{Statement of Corollary 10:} There is a space between $f(|X|)$ and the period that follows it. The space should be removed. 
+\item \textbf{First paragraph of the proof of Corollary 10:} When making a reference to Lemma 47, it might be nice to put in parentheses afterwards ``(see the appendix).'' Otherwise, the reader may be confused that we are using a lemma which has not appeared yet.
+\item \textbf{Second paragraph of the proof of Corollary 10:} ``\textbf{Say $\boldsymbol{X}$ is} a cut...'' $\to$ ``\textbf{Let $\boldsymbol{X}$ be} a cut...'' and ``\textbf{Say $\boldsymbol{G'}$ is} obtained from $G$ by pruning'' $\to$ ``\textbf{Let $\boldsymbol{G'}$ be} obtained from $G$ by pruning \textbf{at $\boldsymbol{X}$}''
+\item \textbf{Same paragraph:} I think its better if ``at'' is not emphasised. That is, ``\texttt{\textbackslash{emph\{prune\}} at}'' as opposed to ``\texttt{\textbackslash{emph\{prune at\}} }''
+\item \textbf{Same paragraph:} ``$X$ is not a $\frac{t-1}{2}$-bad cut, and $\rho_G(U)\leq \frac{t-1}{2}$'' $\to$ ``$X$ is not a $\left(\frac{t-1}{2}\right)$-bad cut, and \textbf{so} $\rho_G(U)\leq \frac{t-1}{2}$.'' 
+\item \textbf{Third paragraph of the proof of Cor 10:} After the sentence ``Prune $G$ at $K$,'' the next sentence would be clearer as: ``The resulting rooted graph is a rooted minor of $(G,R)$ and, therefore, any rooted minor of this graph is also a rooted minor of $(G,R)$.'' To make it really clear, one could add ``by transitivity'' after the word ``therefore.''
+\item \textbf{Same paragraph:} Isn't there an argument required to say that $(G[K\cup U],K)$ satisfies condition (b) of Lemma 9? I assume that this is where we are using that $K$ has minimum size? We should verify (b) explicitly. 
+\item \textbf{Same paragraph:} The sentence starting ``Doing so maintains...'' would be clearer as ``Every rooted graph obtained during this process is a rooted minor of $(G,R)$ (again by Lemma 9).''
+\item \textbf{Same paragraph:} ``... set of vertices that were deleted to form $G'$'' $\to$ ``... set of vertices \textbf{of $\boldsymbol{G^*}$} that were deleted to form $G'$''
+\item[$\boldsymbol{(*)}$] \textbf{End of same paragraph:} I disagree with the inequality $a_{G^*-U^*}\geq a_{G^*}$. It could be the case that $G^*$ is very dense and that $U^*$ is even denser. I also don't think that we need this bound. It seems to me that what we need is that both $a_{G^*-U^*}$ and $a_{G^*}$ are at least $\frac{t-1}{2}$. I believe that this is true because every cut that we prune at during the process is also a cut of $G$, and so the components that are removed cannot be too dense. This needs to be explained more clearly/formally because its not completely clear what the relationship is between pruning at $Z$ after pruning at another cutset $K$ and pruning at $Z$ without pruning at $K$ first. The details here need to be checked!
+
+Anyway, in the rest of the proof, I will only assume that we know that $a_{G^*-U^*}$ and $a_{G^*}$ are greater than $\frac{t-1}{2}$ and see whether this is enough.
+\item[$\boldsymbol{(*)}$] \textbf{Fourth paragraph of the proof of Cor 10:} ``Since $|V(G')|<|V(G)|$ and by minimality of $G$, we have $|V(G')|\leq t$.'' $\to$ ``Since $|V(G')|<|V(G)|$ and $a_{G'}>\frac{t-1}{2}$, if $|V(G')|$ was at least $t+1$, then we could find $T$ as a rooted minor in $G'$ by minimality of $G$ and we would be done. So, we must have $|V(G')|\leq t$ which, since $a_{G'}>\frac{t-1}{2}$,  implies that $|V(G')|=t$.''
+\item[$\boldsymbol{(*)}$] \textbf{Fifth paragraph of the proof of Cor 10:} Given the previous change, we can delete the first sentence of this paragraph. Then change ``Thus $G'$ has at least $r$ non-edges.'' to ``Since $|V(G')|=t$, by Proposition ?? (reference the appropriate statement from Section 4), $G'$ has at least $r$ nonedges.'' The comment written in red could then be deleted. 
+\item \textbf{Same paragraph:} I would probably put some of the calculations into displays, but this is really just a stylistic thing (and it has the disadvantage of making things longer). E.g. ``Thus the number of edges incident to $U^*$ is more than
+\[\left(\frac{t-1}{2}\right)(|V(G^*)|-1)-\binom{t}{2} + r = \left(\frac{t-1}{2}\right)(|V(G^*)|-1-t)+r = \left(\frac{t-1}{2}\right)(|U^*|-1)+r.\text{''}\]
+\item \textbf{Same paragraph:} ``implying $2<(|U^*|-1)(|U^*|-t+2r-1)$ and $|U^*| > t-2r+1$'' $\to$ ``\textbf{which implies that} $2<(|U^*|-1)(|U^*|-t+2r-1)$ and \textbf{therefore} $|U^*| > t-2r+1$''
+\item \textbf{Same paragraph:} ``Now $\rho_{G^*}(U^*)>\frac{\frac{1}{2}(t-1)(|U^*|-1)+r}{|U^*|}$...'' $\to$ ``Putting all of this together, we get that $\rho_{G^*}(U^*)>\frac{\frac{1}{2}(t-1)(|U^*|-1)+r}{|U^*|} = \frac{t-1}{2}  - \frac{t-2r-1}{2|U^*|}$...''
+\item \textbf{Sixth paragraph of the proof of Cor 10:} In the second sentence, delete the comma before ``and.''
+\item \textbf{Seventh paragraph of the proof of Cor 10:} ``minimality of $X$'' should be ``minimality of $Z$,'' I believe. However, $Z$ was never chosen minimal, so maybe I am wrong. In the same sentence, the period is missing. 
+\item[\color{red}{$\boldsymbol{(**)}$}] \textbf{Same paragraph:} There are two things that I don't understand about the statement ``By minimality of $Z$, there is no $(t-2r+1)$-bad cutset in $(G^z,z)$:''
+\begin{itemize}
+\item $(G^z,z)$ has only one root. Therefore, by definition of a bad cutset, any bad cutset in $(G^z,z)$ would have to have size zero. So, there is no bad cutset for trivial reasons (i.e. we don't seem to need minimality of $Z$).
+\item The cut $Z$ is chosen to be $\left(\frac{t-1}{2}\right)$-bad cutset of minimum size, not a $(t-2r+2)$-bad cutset of minimum size. So, I don't see the existence of a $(t-2r+2)$-bad cutset is relevant to $Z$. (I suppose that $t-2r+2$ is probably larger than $\frac{t-1}{2}$, but if we are using this here, we should probably say it). 
+\item In fact, it appears that $Z$ was not chosen to be of minimal size ($K$ was but $Z$ wasn't). So, I'm not sure what is going on here. 
+\end{itemize}
+\item \textbf{Same paragraph:} There is an extra ``$|$'' in the lower bound on $|V(G^z)|$. 
+\item \textbf{Same paragraph:} There is a ``$[$'' that shouldn't be there in the subscript of $a_{G^z}$. 
+\item \textbf{Same paragraph:} I think that the fact that the fact that we are done in the $r=1$ case could use a bit of detail. For example, ``This proves the claim in the $r=1$ case'' $\to$ ``In particular, this completes the proof in the case $r=1$ since we can find a copy of $T_1$ rooted at $z$ by induction and then contract the shortest path from the root $v_1$ to $z$ to obtain a minor of $T_1$ rooted at $v_1$. Note that this is indeed a minor of $T_1$ since $U'$ does not contain $v_1$ and so it does not contain any vertex of the shortest path from $v_1$ to $z$.''
+\item \textbf{Same paragraph:} The sentence ``Now assume $r\geq2$'' at the end of this paragraph might be better if it was moved to the start of the next paragraph. 
+\item \textbf{Eighth paragraph of the proof of Cor 10:} This paragraph seems like a strange interlude. The point of this paragraph doesn't become clear until half way through the paragraph that follows it. I think it would be more natural to jump into the case that some $v_i\in R$ is adjacent to a vertex of $U'$ and to establish this as a part of that proof. 
+\item[\color{red}{$\boldsymbol{(**)}$}] \textbf{Ninth paragraph of the proof of Cor 10:} I have a couple of problems with the statement that there is no $\left(\frac{t'-1}{2}\right)$-bad cutset in $(G^*-U^*-v_i,R')$:
+\begin{itemize}
+\item The reason given for this is that any such cutset would be a bad cutset in $G$. By this, do you mean a $\left(\frac{t'-1}{2}\right)$-bad cutset or a $\left(\frac{t-1}{2}\right)$-bad cutset? If it is the former, then this does not contradict our choice of $G$. 
+\item Moreover, suppose that $K$ is a $\left(\frac{t'-1}{2}\right)$-bad cutset of $(G^*-U^*-v_i,R')$ and let $\tilde{U}$ denote the component which certifies its badness. Then, indeed, $K$ is a cutset of $G$. However, $\tilde{U}$ may not be a component of $G-K$. That is, the component, say $U^\dagger$, of $G-K$ containing $\tilde{U}$ may also contain other vertices which were deleted during some step of the pruning process which took $G$ to $G^*$. So, I don't think that we have any way of saying how dense or sparse $U^\dagger$ is. 
+\end{itemize}
+\item \textbf{Same paragraph:} In the last sentence, I don't see how the fact that $t\geq7$ is in any way relevant. I would finish the proof by noting that if $T_i$ has at most $r-1$ vertices, then we must have $r\geq3$. But then we can't have $3\cdot 2^{r-1} - 1 \leq t\leq 3r+1$. I don't think that $t\geq7$ is needed (or even useful) here.
+\item \textbf{Tenth paragraph of the proof of Cor 10:} Here, there is a lemma which is referenced, but the reference to it is broken. I can't tell which lemma this is supposed to be. 
+\item \textbf{Same paragraph:} It might be cleaner to define $y$ to be equal $z$ if $z$ is adjacent to $v_r$ and, otherwise, to be a non-root common neighbour of $v_r$ and $z$. Then we could just let $B:=\{v_r,y,z\}$. 
+\item \textbf{Last paragraph of proof of Cor 10:} I didn't read this paragraph carefully, but I see what you are doing and it looks ok. 
+\item \textbf{Statement of Corollary 11:} What is meant by ``separating'' here? Can $Y$ contain vertices of $R$ and $X$ or not? I am guessing that you are allowing $Y$ to contain such vertices, but the reader might not realise that. 
+\item[$\boldsymbol{(*)}$] \textbf{Proof of Corollary 11:} The second sentence is organised a bit strangely and I think it is missing a reference to Lemma 46. Perhaps better would be ``Since $X$ is nearly bad, there is a component $U$ of $G-X$ disjoint from $R$ such that $\rho_G(U)> \frac{t-1}{2}\geq f(r) =f(|X|)$ by Lemma 46.''
+\item \textbf{Same Proof:} In the sentence ``By Lemma 9 and Corollary 10...'' I assume that Corollary 10 is being used to verify condition (b) of Lemma 9, right? If so, we should say it. 
+\item[$\boldsymbol{(*)}$] \textbf{Same sentence:} The period in the middle of ``rooted graph. $(G[X\cup U],X)$'' should be removed.
+\item \textbf{Second and third sentences:} The second and third sentences of the proof of Cor 11 should be swapped. 
+\item \textbf{Last sentence of proof of Cor 11:} The existence of the paths from $X$ to $Y$ uses the minimality of $Y$ and Menger's Theorem, right? If so, we should make that clear. 
+\item\textbf{End of the Proof of Cor 11:} The way that this proof ends is a little bit unkind to the reader. They have to go through and work out what conditions they need to apply the argument from Cor 10 and then make sure that those conditions hold for the situation at the end of the proof of Cor 11. It would be better to state another result, before Cor 10, which we can apply in both proofs. 
+\item \textbf{Statement of Cor 12:} It might be better to rephrase the end of the statement as ``... is at most $\binom{|X|}{2} - |E(G[X])| + a_G\cdot |U|$.'' 
+\item \textbf{Second sentence of proof of Cor 12:} Again, there is a rogue period after ``rooted graph.''
+\item \textbf{Next sentence:} Comma after $U$ is not necessary. 
+\item \textbf{Second paragraph of proof of Cor 12:} Delete the ``a'' before $G',G^*,U^*,\dots$
+\item \textbf{Same sentence:} Cor 11 does not involve $G',G^*$, etc. So, perhaps we should be saying ``Following the proof of Corollary 10...''
+\item[\color{red}{$\boldsymbol{(**)}$}] \textbf{Same sentence:} Why are we done unless $G^*=G$ and $Z$ has size $r$? Is this implicit in the proof of Corollary 10? If so, we should make this clearer. 
+\item \textbf{Second paragraph of Cor 12:} What is the ``bound on the density of special rooted minors?'' This should be a proposition or lemma or something that we can reference (so that the reader can find it).
+\item \textbf{Proof of Cor 12:} I haven't read the rest of the proof carefully yet. Just skimmed and caught the following typos. 
+\item \textbf{Third paragraph of Corollary 12:} There is a ``Z'' which should be in math mode. Also, ``$r-1$ connected should be ``$(r-1)$-connected.'' 
+\item \textbf{Fifth paragraph of proof of Cor 12:} Why is ``$(T_r)$'' written in parentheses? 
+\item \textbf{First paragraph of proof of Lemma 9:} For the $p=2$ case, I think that it would be good to say more than ``by hypothesis.'' An argument could go like this: Suppose that $p=2$. If the two vertices of $Z$ are adjacent, then we are done. Next, if there is a component $U$ of $F-Z$ such that both elements of $Z$ have a neighbour in $U$, then we contract all of $U$ to a vertex of $Z$ and we are again done. Thus, the two vertices of $Z$ are in different components of $F$. But then condition (b) is violated: to see this, let $U$ be the densest component of $F-Z$. Then $\rho_F(U) \geq \rho_F(V(F)-Z)$ and $U$ is a component of $F-z$ for some $z\in Z$. 
+\end{itemize}
+
+\section{Avoiding Nearly Bad Cuts of Size $\boldsymbol{r}$}
+
+\begin{itemize}
+\item \textbf{Section title:} It looks a bit nicer to change the \texttt{\$r\$} in the section title to \texttt{\$\textbackslash{boldsymbol}\{r\}\$}
+\end{itemize}
+
+\section{More Connectivity Results}
+
+\begin{itemize}
+\item[$\boldsymbol{(*)}$] \textbf{First paragraph:} ``section,exploiting'' needs a space.
+\item[$\boldsymbol{(*)}$] \textbf{Same paragraph:} ``mimicing'' should be ``mimicking.''
+\item[$\boldsymbol{(*)}$] \textbf{Title of Subsection 7.1:} The $r$ should be written in math mode. I would suggest writing ``Cuts of size at most \texttt{\$\textbackslash{boldsymbol}\{r\}\$}'' because it looks better
+\end{itemize}
+
+\section{Comments on Other Sections}
+
+\begin{itemize}
+\item[$\boldsymbol{(*)}$] \textbf{Appendix:} Clearly the second appendix lemma (Lemma 45 in the version I'm looking at) implies the fourth appendix lemma. So, the fourth is redundant. (However, no proof has been written for the second appendix lemma... so are we sure its true?) 
+\item[$\boldsymbol{(*)}$]  \textbf{First lemma in the appendix (Lemma 44 in the version I'm looking at):}  Here, we should probably specify $s\neq 1$ since, otherwise, we are dividing by zero. To avoid division by zero, we could instead prove the statement 
+\[(t-1)^2 - 1 - (s-3)(s-1) \geq 4(t-3)(s-1).\]
+Here is a way to see that this inequality holds (perhaps this isn't how the proof should eventually be written, but maybe it will lead us to a better proof). The above inequality can be written equivalently as
+\[(t-1)^2 - 4(t-3)(s-1) - (s-3)(s-1) - 1 \geq0\]
+\[\Leftrightarrow (t-1)^2 - 4(t-1)(s-1) + 8(s-1) - (s-1)^2 + 2(s-1)- 1 \geq0\]
+\[\Leftrightarrow (t-1)^2 - 4(t-1)(s-1) - (s-1)^2 + 10(s-1)- 1 \geq0.\]
+If $s=1$, then the above inequality holds since $t\geq2$. If $s=2$, then the quadratic on the left side of the inequality is always positive (the discriminant is negative). So, we assume that $s\geq3$. By the quadratic formula, the above inequality holds provided that
+\[t-1\geq \frac{4(s-1) + \sqrt{16(s-1)^2 - 4(-(s-1)^2 + 10(s-1)-1)}}{2}\]
+\[=\frac{4(s-1) + \sqrt{20(s-1)^2 - 40(s-1) + 4}}{2}.\]
+For $3\leq s\leq r$, the right side of this inequality is maximized when $s=r$. So, we are done if
+\[t\geq \left(2+\sqrt{5}\right)(r-1) + 1\]
+which is true since $3\cdot 2^{r-1} - 1 > \left(2+\sqrt{5}\right)(r-1) + 1$ for all $r\geq3$.  
+\end{itemize}
+
+\end{document}
